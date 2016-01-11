@@ -1,9 +1,11 @@
-FROM progrium/busybox
+FROM gliderlabs/alpine
 MAINTAINER Arthur Tsang <amaryllis.arthur@gmail.com>
 
 ADD https://releases.hashicorp.com/vault/0.4.0/vault_0.4.0_linux_amd64.zip /tmp/vault.zip
 RUN cd /bin && unzip /tmp/vault.zip && chmod +x /bin/vault && rm /tmp/vault.zip
-RUN setcap cap_ipc_lock=+ep $(readlink -f /bin/vault))
+
+RUN apk-install libcap
+RUN setcap cap_ipc_lock=+ep $(readlink -f /bin/vault)
 
 ADD vault.json /opt/config/vault.json
 
